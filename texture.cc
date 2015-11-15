@@ -1,5 +1,13 @@
 #include <SFML/Graphics.hpp>
 
+const std::string vertexShader = \
+  "void main()" \
+  "{" \
+  "  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;" \
+  "  gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;" \
+  "  gl_FrontColor = gl_Color;" \
+  "}";
+
 const std::string fragmentShader = \
   "uniform sampler2D texture;" \
   "void main()" \
@@ -36,15 +44,20 @@ int main(int argc, char* argv[])
   quad[3].position = sf::Vector2f(256, 640);
 
   quad[0].texCoords = sf::Vector2f(0, 0);
-  quad[1].texCoords = sf::Vector2f(32, 0);
-  quad[2].texCoords = sf::Vector2f(32, 32);
-  quad[3].texCoords = sf::Vector2f(0, 32);
+  quad[1].texCoords = sf::Vector2f(32.0, 0);
+  quad[2].texCoords = sf::Vector2f(32.0, 32.0);
+  quad[3].texCoords = sf::Vector2f(0, 32.0);
+
+  /*quad[0].texCoords = sf::Vector2f(0, 0);
+  quad[1].texCoords = sf::Vector2f(1.0/16.0, 0);
+  quad[2].texCoords = sf::Vector2f(1.0/16.0, 1.0/16.0);
+  quad[3].texCoords = sf::Vector2f(0, 1.0/16.0);*/
 
   sf::Texture texture;
   texture.loadFromFile("data/grid.png");
 
   sf::Shader shader;
-  shader.loadFromMemory(fragmentShader, sf::Shader::Fragment);
+  shader.loadFromMemory(vertexShader, fragmentShader);
   shader.setParameter("texture", texture);
 
   while (window.isOpen())
